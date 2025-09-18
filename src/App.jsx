@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-do
 import { motion } from "framer-motion";
 import AddVehiclePage from "./pages/AddVehiclePage";
 import SearchBookPage from "./pages/SearchBookPage";
-import Loader from "./components/Loader"; // 👈 import loader
+import Loader from "./components/Loader";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -18,25 +18,29 @@ export default function App() {
 
   return (
     <Router>
-      {/* 🚖 Navbar */}
-      <nav className="bg-black border-b border-gray-800 text-white px-6 py-4 flex justify-between items-center shadow-lg">
-        <h1 className="text-2xl font-extrabold tracking-wide text-green-400">
+      {/* 🚖 Mobile Responsive Navbar */}
+      <nav className="bg-black border-b border-gray-800 text-white px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center shadow-lg">
+        <h1 className="text-xl sm:text-2xl font-extrabold tracking-wide text-green-400">
           FleetLink
         </h1>
 
-        <div className="flex space-x-6">
+        <div className="flex space-x-2 sm:space-x-6">
           <NavLink
             to="/"
             end
             className={({ isActive }) =>
-              `relative text-lg font-medium transition ${
+              `relative text-sm sm:text-lg font-medium transition ${
                 isActive ? "text-green-400" : "text-gray-300 hover:text-white"
               }`
             }
           >
             {({ isActive }) => (
-              <motion.span whileHover={{ scale: 1.1 }} className="px-2">
-                Search & Book
+              <motion.span 
+                whileHover={{ scale: 1.05 }} 
+                className="px-1 sm:px-2 block"
+              >
+                <span className="hidden sm:inline">Search & Book</span>
+                <span className="sm:hidden">🔍 Search</span>
                 {isActive && (
                   <motion.div
                     layoutId="underline"
@@ -50,14 +54,18 @@ export default function App() {
           <NavLink
             to="/add"
             className={({ isActive }) =>
-              `relative text-lg font-medium transition ${
+              `relative text-sm sm:text-lg font-medium transition ${
                 isActive ? "text-green-400" : "text-gray-300 hover:text-white"
               }`
             }
           >
             {({ isActive }) => (
-              <motion.span whileHover={{ scale: 1.1 }} className="px-2">
-                Add Vehicle
+              <motion.span 
+                whileHover={{ scale: 1.05 }} 
+                className="px-1 sm:px-2 block"
+              >
+                <span className="hidden sm:inline">Add Vehicle</span>
+                <span className="sm:hidden">➕ Add</span>
                 {isActive && (
                   <motion.div
                     layoutId="underline"
@@ -70,7 +78,7 @@ export default function App() {
         </div>
       </nav>
 
-      {/* 🚀 Pages */}
+      
       <Routes>
         <Route path="/" element={<SearchBookPage />} />
         <Route path="/add" element={<AddVehiclePage />} />

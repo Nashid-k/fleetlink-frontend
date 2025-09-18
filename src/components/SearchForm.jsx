@@ -1,8 +1,10 @@
 import { useState } from "react";
 // eslint-disable-next-line no-unused-vars
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"; 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+// eslint-disable-next-line no-unused-vars
+import api from "../services/api.js"; 
 
 export default function SearchForm({ onSearch, isLoading }) {
   const [query, setQuery] = useState({

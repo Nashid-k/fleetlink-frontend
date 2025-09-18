@@ -1,7 +1,8 @@
-import axios from "axios";
+/* eslint-disable no-unused-vars */
 // eslint-disable-next-line no-unused-vars
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"; 
 import { useState } from "react";
+import api from "../services/api.js"; 
 
 export default function VehicleList({ vehicles, query, onBooked }) {
   const [bookingId, setBookingId] = useState(null);
@@ -9,15 +10,14 @@ export default function VehicleList({ vehicles, query, onBooked }) {
   const bookVehicle = async (vehicleId) => {
     setBookingId(vehicleId);
     try {
-      const res = await axios.post("/api/bookings", {
+      const res = await api.post("/api/bookings", {
         vehicleId,
         fromPincode: query.fromPincode,
         toPincode: query.toPincode,
         startTime: query.startTime,
         customerId: "demoUser123",
-      });
+      }); 
       onBooked(`✅ Booking confirmed: ${res.data._id}`);
-    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       onBooked("❌ Booking failed (maybe already booked).");
     } finally {
@@ -25,24 +25,23 @@ export default function VehicleList({ vehicles, query, onBooked }) {
     }
   };
 
-  // vehicle emojies 
   const getVehicleImage = (vehicleName) => {
     const name = vehicleName.toLowerCase();
-    
-    if (name.includes('car') || name.includes('sedan') || name.includes('suv')) {
+
+    if (name.includes("car") || name.includes("sedan") || name.includes("suv")) {
       return "🚗";
-    } else if (name.includes('bike') || name.includes('motorcycle')) {
+    } else if (name.includes("bike") || name.includes("motorcycle")) {
       return "🏍️";
-    } else if (name.includes('auto') || name.includes('rickshaw') || name.includes('tuk')) {
+    } else if (name.includes("auto") || name.includes("rickshaw") || name.includes("tuk")) {
       return "🛺";
-    } else if (name.includes('truck') || name.includes('lorry')) {
+    } else if (name.includes("truck") || name.includes("lorry")) {
       return "🚚";
-    } else if (name.includes('van') || name.includes('minivan')) {
+    } else if (name.includes("van") || name.includes("minivan")) {
       return "🚐";
-    } else if (name.includes('cycle') || name.includes('bicycle')) {
+    } else if (name.includes("cycle") || name.includes("bicycle")) {
       return "🚲";
     } else {
-      return "🚗"; //default is set into car 
+      return "🚗";
     }
   };
 
@@ -64,12 +63,9 @@ export default function VehicleList({ vehicles, query, onBooked }) {
             className="bg-gray-900 border border-gray-700 rounded-xl p-4 shadow-lg"
           >
             <div className="flex items-start space-x-4">
-              
               {/* Vehicle icon */}
-              <div className="text-3xl flex-shrink-0">
-                {getVehicleImage(v.name)}
-              </div>
-              
+              <div className="text-3xl flex-shrink-0">{getVehicleImage(v.name)}</div>
+
               <div className="flex-grow">
                 <p className="text-lg font-bold">{v.name}</p>
                 <div className="grid grid-cols-2 gap-2 mt-2">

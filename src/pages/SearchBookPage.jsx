@@ -1,10 +1,10 @@
 import { useState } from "react";
-import axios from "axios";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import SearchForm from "../components/SearchForm";
 import VehicleList from "../components/VehicleList";
 import BookingList from "../components/BookingList";
+import api from "../services/api.js";
 
 export default function SearchBookPage() {
   const [vehicles, setVehicles] = useState([]);
@@ -21,12 +21,14 @@ export default function SearchBookPage() {
     setHasSearched(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 3000));
-      const res = await axios.get("/api/vehicles/available", { params: q });
+      const res = await api.get("/api/vehicles/available", { params: q });
       setVehicles(res.data.available);
       setQuery(q);
       setMessage("");
-    } catch {
+    } catch (error) {
+      console.error("Search error:", error);
       setMessage("Error fetching vehicles. Please try again.");
+      setVehicles([]);
     } finally {
       setLoading(false);
     }

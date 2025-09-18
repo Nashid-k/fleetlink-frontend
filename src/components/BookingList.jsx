@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"; // Removed no-unused-vars
 import { format, parseISO } from "date-fns";
+import api from "../services/api.js"; 
 
 export default function BookingList({ customerId }) {
   const [bookings, setBookings] = useState([]);
@@ -15,7 +15,7 @@ export default function BookingList({ customerId }) {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get(`/api/bookings?customerId=${customerId}`);
+      const res = await api.get(`/api/bookings?customerId=${customerId}`); // Use api
       setBookings(res.data);
     } catch (error) {
       setMessage("Failed to load bookings");
@@ -26,10 +26,9 @@ export default function BookingList({ customerId }) {
 
   const cancelBooking = async (bookingId) => {
     try {
-      await axios.delete(`/api/bookings/${bookingId}`);
+      await api.delete(`/api/bookings/${bookingId}`); // Use api
       setMessage("Booking cancelled successfully");
-      fetchBookings(); 
-    // eslint-disable-next-line no-unused-vars
+      fetchBookings();
     } catch (error) {
       setMessage("Failed to cancel booking");
     }
