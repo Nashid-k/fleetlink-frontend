@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import AddVehiclePage from "./pages/AddVehiclePage";
 import SearchBookPage from "./pages/SearchBookPage";
@@ -8,7 +9,7 @@ import Loader from "./components/Loader";
 export default function App() {
   const [loading, setLoading] = useState(true);
 
-  // Show splash screen for 1.5s
+
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
@@ -18,7 +19,6 @@ export default function App() {
 
   return (
     <Router>
-      {/* 🚖 Mobile Responsive Navbar */}
       <nav className="bg-black border-b border-gray-800 text-white px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center shadow-lg">
         <h1 className="text-xl sm:text-2xl font-extrabold tracking-wide text-green-400">
           FleetLink
