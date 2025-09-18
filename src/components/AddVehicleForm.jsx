@@ -1,10 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import Loader from "../components/Loader";
 
 export default function AddVehicleForm() {
-  const [form, setForm] = useState({ name: "", capacityKg: "", tyres: "" });
+  const [form, setForm] = useState({ name: "", capacityKg: "", tyres: "", estimatedRideDurationHours: "" });
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -12,60 +15,103 @@ export default function AddVehicleForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      await axios.post("/api/vehicles", form); // ✅ proxy handles URL
-      setMessage("✅ Vehicle added successfully!");
-      setForm({ name: "", capacityKg: "", tyres: "" });
+      await axios.post("/api/vehicles", form);
+      setMessage("Vehicle added successfully!");
+      setForm({ name: "", capacityKg: "", tyres: "", estimatedRideDurationHours: "" });
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       setMessage("❌ Error adding vehicle.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 p-6">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      {loading && <Loader />}
+      
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-md bg-gray-900 border border-gray-700 rounded-2xl shadow-xl p-8"
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md bg-gray-800 border border-gray-700 rounded-xl shadow-xl p-6"
       >
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">
+        <h2 className="text-xl font-bold text-white mb-5 text-center">
           🚚 Add Vehicle
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <input
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Vehicle Name"
-            className="w-full p-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-          <input
-            type="number"
-            name="capacityKg"
-            value={form.capacityKg}
-            onChange={handleChange}
-            placeholder="Capacity (Kg)"
-            className="w-full p-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-          <input
-            type="number"
-            name="tyres"
-            value={form.tyres}
-            onChange={handleChange}
-            placeholder="Tyres"
-            className="w-full p-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
+              Vehicle Name
+            </label>
+            <input
+              id="name"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="e.g., Delivery Truck"
+              className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 outline-none"
+              required
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="capacityKg" className="block text-sm font-medium text-gray-300 mb-1">
+              Capacity (Kg)
+            </label>
+            <input
+              type="number"
+              id="capacityKg"
+              name="capacityKg"
+              value={form.capacityKg}
+              onChange={handleChange}
+              placeholder="e.g., 1000"
+              className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 outline-none"
+              required
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="tyres" className="block text-sm font-medium text-gray-300 mb-1">
+              Number of Tyres
+            </label>
+            <input
+              type="number"
+              id="tyres"
+              name="tyres"
+              value={form.tyres}
+              onChange={handleChange}
+              placeholder="e.g., 4"
+              className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 outline-none"
+              required
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="estimatedRideDurationHours" className="block text-sm font-medium text-gray-300 mb-1">
+              Estimated Duration (Hours)
+            </label>
+            <input
+              type="number"
+              id="estimatedRideDurationHours"
+              name="estimatedRideDurationHours"
+              value={form.estimatedRideDurationHours}
+              onChange={handleChange}
+              placeholder="e.g., 3.5"
+              step="0.5"
+              className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 outline-none"
+              required
+            />
+          </div>
 
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             type="submit"
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg shadow-md transition"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg shadow-md transition"
           >
             Add Vehicle
           </motion.button>
@@ -75,7 +121,7 @@ export default function AddVehicleForm() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mt-4 text-center text-sm text-gray-300"
+            className="mt-4 p-3 bg-green-900/30 border border-green-700/50 rounded-lg text-center text-sm text-green-300"
           >
             {message}
           </motion.p>

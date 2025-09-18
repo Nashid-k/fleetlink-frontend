@@ -1,8 +1,13 @@
 import axios from "axios";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 export default function VehicleList({ vehicles, query, onBooked }) {
+  const [bookingId, setBookingId] = useState(null);
+
   const bookVehicle = async (vehicleId) => {
+    setBookingId(vehicleId);
     try {
       const res = await axios.post("/api/bookings", {
         vehicleId,
@@ -12,48 +17,92 @@ export default function VehicleList({ vehicles, query, onBooked }) {
         customerId: "demoUser123",
       });
       onBooked(`✅ Booking confirmed: ${res.data._id}`);
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       onBooked("❌ Booking failed (maybe already booked).");
+    } finally {
+      setBookingId(null);
+    }
+  };
+
+  // vehicle emojies 
+  const getVehicleImage = (vehicleName) => {
+    const name = vehicleName.toLowerCase();
+    
+    if (name.includes('car') || name.includes('sedan') || name.includes('suv')) {
+      return "🚗";
+    } else if (name.includes('bike') || name.includes('motorcycle')) {
+      return "🏍️";
+    } else if (name.includes('auto') || name.includes('rickshaw') || name.includes('tuk')) {
+      return "🛺";
+    } else if (name.includes('truck') || name.includes('lorry')) {
+      return "🚚";
+    } else if (name.includes('van') || name.includes('minivan')) {
+      return "🚐";
+    } else if (name.includes('cycle') || name.includes('bicycle')) {
+      return "🚲";
+    } else {
+      return "🚗"; //default is set into car 
     }
   };
 
   return (
-    <div className="mt-10 max-w-3xl mx-auto text-white">
-      <h3 className="text-2xl font-bold mb-6 text-center">🚗 Available Vehicles</h3>
+    <div className="mt-6 w-full text-white">
+      <h3 className="text-xl font-bold mb-4 text-center">🚗 Available Vehicles</h3>
 
       {vehicles.length === 0 && (
-        <p className="text-center text-gray-400">No vehicles available.</p>
+        <p className="text-center text-gray-400 py-4">No vehicles available for your search criteria.</p>
       )}
 
-      <ul className="space-y-5">
+      <div className="space-y-4">
         {vehicles.map((v, index) => (
-          <motion.li
+          <motion.div
             key={v._id}
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.1 }}
-            className="bg-gray-900 border border-gray-700 rounded-xl p-6 flex justify-between items-center shadow-lg hover:shadow-green-500/20 transition"
+            className="bg-gray-900 border border-gray-700 rounded-xl p-4 shadow-lg"
           >
-            <div>
-              <p className="text-lg font-bold">{v.name}</p>
-              <p className="text-gray-400">Capacity: {v.capacityKg} Kg</p>
-              <p className="text-gray-400">Tyres: {v.tyres}</p>
-              <p className="text-green-400 font-medium">
-                ⏱ Estimated Duration: {v.estimatedRideDurationHours} hrs
-              </p>
+            <div className="flex items-start space-x-4">
+              
+              {/* Vehicle icon */}
+              <div className="text-3xl flex-shrink-0">
+                {getVehicleImage(v.name)}
+              </div>
+              
+              <div className="flex-grow">
+                <p className="text-lg font-bold">{v.name}</p>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <p className="text-gray-400 text-sm">Capacity: {v.capacityKg} Kg</p>
+                  <p className="text-gray-400 text-sm">Tyres: {v.tyres}</p>
+                </div>
+                <p className="text-green-400 font-medium text-sm mt-2">
+                  ⏱ Est. Duration: {v.estimatedRideDurationHours} hrs
+                </p>
+              </div>
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => bookVehicle(v._id)}
-              className="bg-green-500 hover:bg-green-600 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition"
-            >
-              Book Now
-            </motion.button>
-          </motion.li>
+            <div className="mt-4 flex justify-end">
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => bookVehicle(v._id)}
+                disabled={bookingId === v._id}
+                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-700 text-white font-medium px-4 py-2 rounded-lg shadow-md transition text-sm flex items-center"
+              >
+                {bookingId === v._id ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Booking...
+                  </>
+                ) : (
+                  "Book Now"
+                )}
+              </motion.button>
+            </div>
+          </motion.div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

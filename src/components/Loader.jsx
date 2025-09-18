@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 
 export default function Loader() {
@@ -6,17 +7,23 @@ export default function Loader() {
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
         transition={{ duration: 0.6 }}
-        className="relative"
+        className="relative flex flex-col items-center justify-center"
       >
         {/* Shimmer Glow Effect */}
         <div className="absolute -inset-6 bg-gradient-to-r from-green-400 via-green-600 to-green-400 
                         rounded-full blur-2xl opacity-60 animate-pulse"></div>
 
         {/* FleetLink Logo */}
-        <h1 className="text-4xl font-extrabold tracking-wide text-green-400 relative z-10">
+        <h1 className="text-4xl font-extrabold tracking-wide text-green-400 relative z-10 mb-4">
           FleetLink
         </h1>
+        
+        {/* Loading spinner */}
+        <div className="relative z-10">
+          <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
       </motion.div>
     </div>
   );
